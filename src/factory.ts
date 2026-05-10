@@ -4,17 +4,19 @@
 // using `server.registerTool(name, config, cb)` (NOT the deprecated variadic `server.tool(...)`).
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { registerSearchControls } from './tools/search-controls.js';
+import { registerMapControls } from './tools/map-controls.js';
 
 /**
  * Build a fresh McpServer per request (stateless transport pattern).
  *
- * 41-05 registration point — add tool registrations here, e.g.:
+ * Each tool uses `server.registerTool(name, config, handler)` with a raw Zod
+ * shape passed via `inputSchema` (per `@modelcontextprotocol/sdk` v1.x
+ * signature `inputSchema?: ZodRawShapeCompat`). The deprecated variadic
+ * `server.tool(...)` API is not used.
  *
- *     import { registerSearchControls } from './tools/search-controls.js';
- *     registerSearchControls(server);
- *
- * Each tool MUST use `server.registerTool(name, { inputSchema: z.object({...}) }, handler)`
- * per RESEARCH.md Pattern 2 (the variadic `server.tool(...)` API is deprecated).
+ * Plan 41-05 registers `search_controls` + `map_controls` (read-style) here.
+ * Plan 41-05 Task 2 will add `generate_policy` + `assess_gap` (write-style).
  */
 export function buildNormaServer(): McpServer {
   const server = new McpServer({
@@ -22,7 +24,8 @@ export function buildNormaServer(): McpServer {
     version: '1.0.0',
   });
 
-  // Tools land in 41-05 — placeholder until then. tools/list will return [] for now.
+  registerSearchControls(server);
+  registerMapControls(server);
 
   return server;
 }
