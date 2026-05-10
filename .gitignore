@@ -5,3 +5,9 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# mcp-publisher CLI binary (downloaded locally for Registry submission, not source)
+mcp-publisher
+mcp-publisher.exe
+mcp-publisher.tar.gz
+.mcp-publisher/
