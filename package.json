@@ -1,0 +1,46 @@
+{
+  "name": "norma-mcp-server",
+  "version": "1.0.0",
+  "description": "NORMA MCP Server — EU compliance corpus across 8 frameworks via MCP. By Kynosure.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0",
+    "express": "^4.19.0",
+    "@google-cloud/storage": "^7.0.0",
+    "rate-limiter-flexible": "^5.0.0",
+    "pino": "^9.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^22.0.0",
+    "@types/express": "^4.17.0",
+    "tsx": "^4.7.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kynosure-ai/norma-mcp-server"
+  },
+  "homepage": "https://kynosure.ai/en/norma/mcp-server",
+  "author": "Kynosure <dev@kynosure.ai>",
+  "keywords": [
+    "mcp",
+    "compliance",
+    "eu-ai-act",
+    "iso-42001",
+    "nis2",
+    "dora",
+    "iso-27001",
+    "kynosure",
+    "norma"
+  ]
+}
