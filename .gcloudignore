@@ -1,0 +1,20 @@
+# Don't upload to Cloud Build:
+.git/
+.gitignore
+.github/
+.claude-plugin/
+node_modules/
+dist/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Local docs not needed for the build
+README.md
+PROVENANCE.md
+LICENSE
+
+# Logs / scratch
+*.log
+.tmp/

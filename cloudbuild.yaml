@@ -1,0 +1,35 @@
+# Cloud Build config for NORMA MCP Server.
+# Mirrors the Kynosure repo's site/cloudbuild.yaml pattern: build via Docker
+# builder, push to the existing kynosure Artifact Registry repo (DOCKER) at
+# europe-west3-docker.pkg.dev/kynosure-ai/kynosure under the norma-mcp image
+# namespace.
+#
+# Substitutions:
+#   _IMAGE_TAG — tag for the immutable revision (defaults to "latest" but
+#                GitHub Actions overrides to the commit SHA so each push
+#                lands a unique tag for rollback purposes). Both _IMAGE_TAG
+#                and `latest` get pushed together.
+substitutions:
+  _IMAGE_TAG: 'latest'
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'europe-west3-docker.pkg.dev/$PROJECT_ID/kynosure/norma-mcp:${_IMAGE_TAG}'
+      - '-t'
+      - 'europe-west3-docker.pkg.dev/$PROJECT_ID/kynosure/norma-mcp:latest'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'europe-west3-docker.pkg.dev/$PROJECT_ID/kynosure/norma-mcp'
+
+images:
+  - 'europe-west3-docker.pkg.dev/$PROJECT_ID/kynosure/norma-mcp:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

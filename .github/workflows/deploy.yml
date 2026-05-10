@@ -1,0 +1,88 @@
+# Automated deployment for NORMA MCP Server to GCP Cloud Run.
+# Mirrors the kynosure-web pattern (Workload Identity Federation + Cloud
+# Build + Cloud Run deploy). Re-uses the SAME WIF infrastructure as
+# kynosure-ai/Kynosure: copy `WIF_PROVIDER` and `WIF_SERVICE_ACCOUNT`
+# secrets from there to this repo's Actions secrets before the first
+# automated deploy.
+name: Deploy NORMA MCP to Cloud Run
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'README.md'
+      - 'PROVENANCE.md'
+      - 'LICENSE'
+      - '.claude-plugin/**'
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: kynosure-ai
+  REGION: europe-west3
+  SERVICE: norma-mcp
+  REPOSITORY: kynosure
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Build and Push with Cloud Build
+        run: |
+          gcloud builds submit \
+            --config=cloudbuild.yaml \
+            --substitutions=_IMAGE_TAG=${{ github.sha }} \
+            --project=${{ env.PROJECT_ID }} \
+            .
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/norma-mcp:${{ github.sha }}
+          flags: |
+            --allow-unauthenticated
+            --service-account=norma-mcp-runtime@kynosure-ai.iam.gserviceaccount.com
+            --memory=256Mi
+            --cpu=1
+            --min-instances=0
+            --max-instances=10
+            --timeout=300
+            --concurrency=80
+            --cpu-boost
+          env_vars: |
+            NORMA_BUCKET=kynosure-norma-corpus
+            NODE_ENV=production
+          secrets: |
+            NORMA_MCP_API_KEYS=norma-mcp-api-keys:latest
+
+      - name: Smoke test
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+          echo "Service URL: $URL"
+          # Cloud Run's GFE intercepts /healthz, so smoke /health instead.
+          curl -fsS "$URL/health"
+          echo
+          curl -fsS "$URL/about" | grep -q '"service":"norma-mcp"'

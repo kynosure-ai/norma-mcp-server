@@ -1,0 +1,13 @@
+# Match what Cloud Build needs and keep the image small.
+node_modules
+dist
+.git
+.github
+.gitignore
+.gcloudignore
+.claude-plugin
+README.md
+PROVENANCE.md
+LICENSE
+*.log
+.tmp
