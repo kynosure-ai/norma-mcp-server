@@ -6,6 +6,8 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { registerSearchControls } from './tools/search-controls.js';
 import { registerMapControls } from './tools/map-controls.js';
+import { registerGeneratePolicy } from './tools/generate-policy.js';
+import { registerAssessGap } from './tools/assess-gap.js';
 
 /**
  * Build a fresh McpServer per request (stateless transport pattern).
@@ -15,8 +17,11 @@ import { registerMapControls } from './tools/map-controls.js';
  * signature `inputSchema?: ZodRawShapeCompat`). The deprecated variadic
  * `server.tool(...)` API is not used.
  *
- * Plan 41-05 registers `search_controls` + `map_controls` (read-style) here.
- * Plan 41-05 Task 2 will add `generate_policy` + `assess_gap` (write-style).
+ * Plan 41-05 registers all 4 NORMA tools:
+ *   - search_controls   (read-style: keyword + framework filter)
+ *   - map_controls      (read-style: cross-framework crosswalk)
+ *   - generate_policy   (write-style: template parametrization)
+ *   - assess_gap        (write-style: indicative gap register)
  */
 export function buildNormaServer(): McpServer {
   const server = new McpServer({
@@ -26,6 +31,8 @@ export function buildNormaServer(): McpServer {
 
   registerSearchControls(server);
   registerMapControls(server);
+  registerGeneratePolicy(server);
+  registerAssessGap(server);
 
   return server;
 }
