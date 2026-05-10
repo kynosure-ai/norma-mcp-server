@@ -31,17 +31,22 @@ log('INFO', 'corpus_loaded', { template_count: corpus.length });
 const app = express();
 app.use(express.json({ limit: '256kb' }));
 
+// DNS rebinding protection: enabled by default in production, disabled when
+// the corpus is in mock mode (local dev) so smoke tests don't have to enumerate
+// every Host header variant (`localhost:8080`, `127.0.0.1:8080`, etc.).
+const IS_DEV = (process.env.NORMA_BUCKET ?? '') === 'mock';
+
 app.post('/mcp', authenticate, rateLimit, async (req: Request, res: Response) => {
   try {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined, // STATELESS — multi-instance-safe
-      enableDnsRebindingProtection: true,
-      allowedHosts: [
-        'norma-mcp.kynosure.ai',
-        process.env.CLOUD_RUN_HOST ?? '',
-        'localhost',
-        '127.0.0.1',
-      ].filter(Boolean),
+      enableDnsRebindingProtection: !IS_DEV,
+      allowedHosts: IS_DEV
+        ? undefined
+        : [
+            'norma-mcp.kynosure.ai',
+            process.env.CLOUD_RUN_HOST ?? '',
+          ].filter(Boolean),
     });
     res.on('close', () => {
       transport.close().catch(() => {
