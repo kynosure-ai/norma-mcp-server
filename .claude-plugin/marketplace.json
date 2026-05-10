@@ -1,0 +1,14 @@
+{
+  "name": "norma-mcp-server",
+  "displayName": "NORMA MCP Server",
+  "description": "EU compliance corpus across 8 frameworks via MCP — free, hosted by Kynosure",
+  "owner": { "name": "Kynosure", "url": "https://kynosure.ai" },
+  "plugins": {
+    "norma-mcp": {
+      "type": "mcp-server",
+      "transport": "http",
+      "url": "https://norma-mcp.kynosure.ai/mcp",
+      "description": "Search controls + generate policies + map cross-framework + assess gaps"
+    }
+  }
+}
