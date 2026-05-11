@@ -13,11 +13,12 @@ crossReference:
 
 NORMA MCP server local-development fixture. Note this fixture intentionally
 omits the `framework:` frontmatter field to exercise the slug-prefix fallback
-(Phase 37-02 found 4 aims templates omit the field — this mirrors that case).
+(a handful of aims templates in the corpus omit the field — this mirrors that
+case).
 
 The fixture also uses `crossReference:` (camelCase) instead of the more common
-`cross_references:` (snake_case) — Phase 37-03 noted both shapes exist in the
-corpus, so the parser must handle both.
+`cross_references:` (snake_case) — both shapes exist in the corpus, so the
+parser must handle both.
 
 ## Purpose
 

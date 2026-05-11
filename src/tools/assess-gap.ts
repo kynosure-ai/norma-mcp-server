@@ -1,14 +1,14 @@
 // assess_gap — write-style tool. Indicative gap register against a target
-// framework, given a company profile. Heuristic-only per CLAUDE.md v2.0.x
-// methodology — full FCI/WMI/ECI scoring lives in Pyxis.
+// framework, given a company profile. Heuristic-only — full FCI/WMI/ECI
+// scoring lives in Pyxis.
 //
-// Domain rules (simplified for Phase 41 MVP, RESEARCH.md/CONTEXT.md guidance):
+// Domain rules (simplified MVP heuristics):
 //   target=nis2 + has_iso27001 → most controls "partial" with critical-sector
 //     exceptions still flagged as gap (governance accountability, incident
 //     reporting timelines)
 //   target=euaiact + has_iso42001 → "partial" with hard gaps in Art. 11/12/13/14
 //     (technical doc, logging, transparency, human oversight) and Art. 43
-//     conformity assessment / CE marking — explicit per CLAUDE.md v2.0.x split
+//     conformity assessment / CE marking
 //   target=iso27701 + has_iso27001 → "partial" if processes_personal_data
 //   target=cra + has_iso27001 → "partial" but vulnerability handling Art. 13
 //     stays a gap unless CRA-specific work is in flight

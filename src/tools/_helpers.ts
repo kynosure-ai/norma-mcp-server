@@ -1,11 +1,11 @@
 // Shared helpers for tool implementations.
 //
-// Pattern note: helpers were extracted here on second-use across tools (per
-// PLAN 41-05 guidance — "extract on actual reuse, don't pre-create"). The
-// frontmatter parsers below tolerate the empirical shape variations Phase 37
-// surfaced: some templates use `cross_references` (snake_case), others use
-// `crossReference` (camelCase); 4 aims templates omit the `framework` field
-// entirely (Phase 37-02 finding) — slug prefix is the fallback there.
+// Pattern note: helpers were extracted here on second-use across tools
+// ("extract on actual reuse, don't pre-create"). The frontmatter parsers
+// below tolerate the empirical shape variations the corpus surfaces:
+// some templates use `cross_references` (snake_case), others use
+// `crossReference` (camelCase); a handful of aims templates omit the
+// `framework` field entirely — slug prefix is the fallback there.
 
 import type { CorpusEntry } from '../types.js';
 
@@ -65,7 +65,7 @@ export function extractExcerpt(content: string, needle: string, length: number):
 
 /**
  * Pull every source-reference style citation field out of frontmatter and
- * return a flat string array. Handles all observed Phase 37 shapes:
+ * return a flat string array. Handles all observed corpus shapes:
  * `source_refs`, `sourceRefs`, `regulation_articles`, `iso_clauses`,
  * `directive_articles`, `gdpr_articles`. Both inline arrays and single-line
  * comma-separated strings tolerated.
@@ -115,7 +115,7 @@ export interface CrossReference {
 /**
  * Parse the cross-reference frontmatter block. Supports both
  * `cross_references:` (snake_case, more common) and `crossReference:`
- * (camelCase, used in some EN bcms templates per Phase 37-02 finding).
+ * (camelCase, used in some EN bcms templates).
  *
  * Tolerated shapes per entry:
  *   - "<framework>: <ref>"   (e.g. "nis2: Art. 21")
@@ -168,8 +168,8 @@ const FRAMEWORK_PREFIX_MAP: Record<string, string> = {
 
 /**
  * Best-effort framework identifier for a corpus entry. Uses the parsed
- * `framework` field first; falls back to the slug prefix (Phase 37-02 found
- * 4 aims templates omit the `framework` field). The output is lowercased.
+ * `framework` field first; falls back to the slug prefix (a handful of aims
+ * templates omit the `framework` field). The output is lowercased.
  */
 export function getFrameworkId(entry: CorpusEntry): string {
   if (entry.framework && entry.framework.toLowerCase() !== 'unknown') {
