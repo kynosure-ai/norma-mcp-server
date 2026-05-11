@@ -134,6 +134,12 @@ MIT, with a not-legal-advice clause appended. See [`LICENSE`](./LICENSE) for the
 
 The NORMA corpus origin, license posture, and editorial provenance are attested in [`PROVENANCE.md`](./PROVENANCE.md), mirrored byte-identically from the `norma-corpus-v1.0.0` tag in the upstream Kynosure repository. The byte-identical invariant is the audit trail.
 
+## About Kynosure
+
+This MCP server is built and maintained by [Kynosure](https://kynosure.ai), a European compliance platform. The server exposes 4 tools — `search_controls`, `map_controls`, `generate_policy`, `assess_gap` — that route compliance questions through a curated subset of the Kynosure corpus covering NIS2, DORA, ISO 27001, ISO 22301, ISO 42001, ISO 27701, CRA, and the EU AI Act. The corpus itself is served at runtime from a private Cloud Storage bucket ("open code, private data" pattern) so the strategic-subset boundary stays enforced at the data layer, not just the code layer.
+
+For the full multi-framework assessment, sector-profiled scoring, and methodology-backed PDF reports, see [kynosure.ai](https://kynosure.ai/?utm_source=norma-mcp-server-readme&utm_medium=github&utm_campaign=about-kynosure).
+
 ---
 
 Catalogue + side-by-side decision matrix:

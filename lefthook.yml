@@ -1,0 +1,21 @@
+# lefthook.yml - Conventional Commits + scrub-vocabulary gate
+# Install: lefthook install (creates .git/hooks/* shims pointing at lefthook)
+
+commit-msg:
+  parallel: false
+  commands:
+    conventional-format:
+      run: |
+        if ! grep -Eq '^(feat|fix|docs|chore|refactor|test|build|ci|perf|style|revert)(\([a-z0-9-]+\))?!?: .{1,72}' "{1}"; then
+          echo "ERROR: Commit message must follow Conventional Commits."
+          echo "  Format: <type>(<optional-scope>): <subject>"
+          echo "  Example: feat: add cross-framework mapping reference"
+          exit 1
+        fi
+    no-internal-vocabulary:
+      run: |
+        if grep -Eq '(\bPhase[ -]?[0-9]|/gsd:|\.planning/|^[a-z]+\([0-9]+-[0-9]+\):)' "{1}"; then
+          echo "ERROR: Commit message contains internal development vocabulary."
+          echo "Public repos use plain conventional-commits without phase prefixes."
+          exit 1
+        fi
